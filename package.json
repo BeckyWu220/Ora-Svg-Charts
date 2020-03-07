@@ -1,0 +1,13 @@
+{
+  "name": "ora-svg-charts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "keywords": [],
+  "author": "Becky Wu",
+  "license": "MIT",
+  "dependencies": {
+    "react-native-svg": "9.13.3",
+    "react-native-svg-charts": "5.2.0"
+  }
+}
