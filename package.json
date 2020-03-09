@@ -9,5 +9,8 @@
   "dependencies": {
     "react-native-svg": "9.13.3",
     "react-native-svg-charts": "5.2.0"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.10.0"
   }
 }
