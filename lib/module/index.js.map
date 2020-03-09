@@ -1,1 +1,1 @@
-{"version":3,"sources":["index.ts"],"names":["PieChart"],"mappings":"AAAA,OAAOA,QAAP,MAAqB,aAArB;AAEA,SACIA,QADJ","sourcesContent":["import PieChart from './pie-chart'\n\nexport {\n    PieChart\n}"]}
+{"version":3,"sources":["index.ts"],"names":["PieChart","BarChart"],"mappings":"AAAA,OAAOA,QAAP,MAAqB,aAArB;AACA,OAAOC,QAAP,MAAqB,aAArB;AAEA,SACID,QADJ,EAEIC,QAFJ","sourcesContent":["import PieChart from './pie-chart'\nimport BarChart from './bar-chart'\n\nexport {\n    PieChart,\n    BarChart\n}"]}
