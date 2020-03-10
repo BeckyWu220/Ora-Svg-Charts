@@ -13,24 +13,19 @@ interface ChartData {
 
 export interface PieChartProps {
     data: Array<ChartData>,
-    onSelect?(key: ChartData): any,
+    onSelect?(data?: ChartData): any,
 }
 
 export default function PieChart(props: PieChartProps) {
 
-    const [selectedSlice, setSelectedSlice] = React.useState({
-        label: '',
-        value: 0
+    const [selectedSlice, setSelectedSlice] = React.useState<ChartData>({
+        key: null,
+        value: null
     })
 
     React.useEffect(() => {
-        props.onSelect && props.onSelect({
-            key: selectedSlice.label,
-            value: selectedSlice.value
-        })
+        props.onSelect && props.onSelect(selectedSlice)
     }, [selectedSlice])
-    
-    const { label } = selectedSlice
 
     const colors = ['#9EA8B7', '#7D6A80', '#74988C', '#3E5567', '#63819B']
     const pieChartData = props.data.map((chartData, index) => {
@@ -39,19 +34,13 @@ export default function PieChart(props: PieChartProps) {
             value: chartData.value,
             svg: {
                 fill: chartData.color || colors[index],
-                onClick: () => setSelectedSlice({
-                    label: chartData.key,
-                    value: chartData.value
-                })
+                onClick: () => setSelectedSlice(chartData)
             },
             arc: {
-                outerRadius: selectedSlice.label === chartData.key ? '100%' : '80%',
+                outerRadius: selectedSlice && selectedSlice.key === chartData.key ? '100%' : '80%',
                 padAngle: 0,
             },
-            onPress: () => setSelectedSlice({
-                label: chartData.key,
-                value: chartData.value
-            })
+            onPress: () => setSelectedSlice(chartData)
         }
     })
 
@@ -69,7 +58,7 @@ export default function PieChart(props: PieChartProps) {
                     x={pieCentroid[0]}
                     y={pieCentroid[1]}
                     fill={'#FFFFFF'}
-                    fontWeight={ selectedSlice.label === data.key ? "bold" : undefined}
+                    fontWeight={ selectedSlice && selectedSlice.key === data.key ? "bold" : "normal"}
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
                     fontSize={14}
@@ -81,10 +70,7 @@ export default function PieChart(props: PieChartProps) {
     }
 
     return (
-        <TouchableWithoutFeedback style={styles.container} onPress={() => setSelectedSlice({
-            label: '',
-            value: 0
-        })}>
+        <TouchableWithoutFeedback style={styles.container} onPress={() => setSelectedSlice(null)}>
             <View style={{ justifyContent: 'center' }}>
                 <SVGPieChart
                     style={{ height: 400 }}
@@ -100,7 +86,7 @@ export default function PieChart(props: PieChartProps) {
                         setLabelWidth(width)
                     }}
                     style={[styles.text, { left: deviceWidth / 2 - labelWidth / 2 }]}>
-                    { selectedSlice && label }
+                    { selectedSlice && selectedSlice.key ? selectedSlice.key : '' }
                 </RNText>
             </View>
         </TouchableWithoutFeedback>
