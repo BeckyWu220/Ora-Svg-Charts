@@ -1,6 +1,6 @@
 import React from 'react';
 const ReactNative = require('react-native');
-const { View, Dimensions, Text: RNText, StyleSheet } = ReactNative;
+const { View, Dimensions, Text: RNText, StyleSheet, TouchableWithoutFeedback } = ReactNative;
 // import { View, Dimensions, Text as RNText, StyleSheet } from 'react-native';
 import { PieChart as SVGPieChart } from 'react-native-svg-charts'
 import { Text } from 'react-native-svg'
@@ -81,33 +81,36 @@ export default function PieChart(props: PieChartProps) {
     }
 
     return (
-        <View style={styles.container}>
-        <View style={{ justifyContent: 'center' }}>
-            <SVGPieChart
-                style={{ height: 400 }}
-                outerRadius={'80%'}
-                innerRadius={'40%'}
-                data={pieChartData}
-                valueAccessor={({ item }) => item.value}
-            >
-                <Labels/>
-            </SVGPieChart>
-            <RNText
-                onLayout={({ nativeEvent: { layout: { width } } }) => {
-                    setLabelWidth(width)
-                }}
-                style={[styles.text, { left: deviceWidth / 2 - labelWidth / 2 }]}>
-                { selectedSlice && label }
-            </RNText>
-        </View>
-      </View>
+        <TouchableWithoutFeedback style={styles.container} onPress={() => setSelectedSlice({
+            label: '',
+            value: 0
+        })}>
+            <View style={{ justifyContent: 'center' }}>
+                <SVGPieChart
+                    style={{ height: 400 }}
+                    outerRadius={'80%'}
+                    innerRadius={'40%'}
+                    data={pieChartData}
+                    valueAccessor={({ item }) => item.value}
+                >
+                    <Labels/>
+                </SVGPieChart>
+                <RNText
+                    onLayout={({ nativeEvent: { layout: { width } } }) => {
+                        setLabelWidth(width)
+                    }}
+                    style={[styles.text, { left: deviceWidth / 2 - labelWidth / 2 }]}>
+                    { selectedSlice && label }
+                </RNText>
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-      width: '100%',
-      height: '100%',
+        width: '100%',
+        height: '100%',
     },
     text: {
         position: 'absolute',

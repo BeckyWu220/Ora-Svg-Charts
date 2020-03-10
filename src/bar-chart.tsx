@@ -1,6 +1,6 @@
 import React from 'react';
 const ReactNative = require('react-native');
-const { View, Image, Text: RNText, TouchableOpacity } = ReactNative;
+const { View, Image, Text: RNText, TouchableOpacity, TouchableWithoutFeedback } = ReactNative;
 import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
 
@@ -105,6 +105,7 @@ export default function BarChart(props: BarChartProps) {
     }
 
     return (
+        <TouchableWithoutFeedback onPress={() =>  setSelectedBar({ label: '', value: 0 }) }>
         <View style={{ height: 250, flexDirection: 'row' }}>
             <YAxis
                 data={barChartData.map((chartData) => chartData.value)}
@@ -165,5 +166,6 @@ export default function BarChart(props: BarChartProps) {
                 }
             </View>
         </View>
+        </TouchableWithoutFeedback>
     )
 }
