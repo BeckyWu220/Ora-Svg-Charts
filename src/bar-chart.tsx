@@ -1,7 +1,7 @@
 import React from 'react';
 const ReactNative = require('react-native');
 const { View } = ReactNative;
-import { BarChart as SVGBarChart } from 'react-native-svg-charts';
+import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
 
 interface ChartData {
@@ -79,16 +79,27 @@ export default function BarChart(props: BarChartProps) {
     }
 
     return (
-        <View>
+        <View style={{ height: 200, flexDirection: 'row' }}>
+            <YAxis
+                data={barChartData.map((chartData) => chartData.value)}
+                contentInset={{ top: 25, bottom: 20 }}
+                svg={{
+                    fill: '#e3e3e3',
+                    fontSize: 12,
+                }}
+                numberOfTicks={4}
+                min={0}
+                formatLabel={(value) => `${(value / total * 100).toFixed(0)}%`}
+            />
             <SVGBarChart
-                style={{ height: 200 }}
+                style={{ flex: 1, marginLeft: 10 }}
                 data={barChartData}
                 gridMin={0}
                 yAccessor={({ item }) => item.value}
-                contentInset={{ top: 25, bottom: 20 }}
+                contentInset={{ top: 25, bottom: 20, left: 60, right: 60 }}
                 spacingInner={0.6}
-                spacingOuter={0.8}
             >
+                <Grid svg={{ stroke: '#e3e3e3' }} />
                 <Labels />
             </SVGBarChart>
         </View>
