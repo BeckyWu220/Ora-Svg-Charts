@@ -1,9 +1,8 @@
 import React from 'react';
 const ReactNative = require('react-native');
 const { View, Image, Text: RNText, TouchableOpacity } = ReactNative;
-import { BarChart as SVGBarChart, Grid, XAxis, YAxis } from 'react-native-svg-charts';
+import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
-import * as scale from 'd3-scale';
 
 interface ChartData {
     key: string,
@@ -12,7 +11,8 @@ interface ChartData {
 }
 
 export interface BarChartProps {
-    data: Array<ChartData>
+    data: Array<ChartData>,
+    onSelect?(key: ChartData): any,
 }
 
 export default function BarChart(props: BarChartProps) {
@@ -21,6 +21,13 @@ export default function BarChart(props: BarChartProps) {
         label: '',
         value: 0
     })
+
+    React.useEffect(() => {
+        props.onSelect && props.onSelect({
+            key: selectedBar.label,
+            value: selectedBar.value
+        })
+    }, [selectedBar])
 
     const [barWidth, setBarWidth] = React.useState(0)
     const [positions, setPositions] = React.useState([])

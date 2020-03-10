@@ -12,7 +12,8 @@ interface ChartData {
 }
 
 export interface PieChartProps {
-    data: Array<ChartData>
+    data: Array<ChartData>,
+    onSelect?(key: ChartData): any,
 }
 
 export default function PieChart(props: PieChartProps) {
@@ -22,6 +23,13 @@ export default function PieChart(props: PieChartProps) {
         value: 0
     })
 
+    React.useEffect(() => {
+        props.onSelect && props.onSelect({
+            key: selectedSlice.label,
+            value: selectedSlice.value
+        })
+    }, [selectedSlice])
+    
     const { label } = selectedSlice
 
     const colors = ['#9EA8B7', '#7D6A80', '#74988C', '#3E5567', '#63819B']
