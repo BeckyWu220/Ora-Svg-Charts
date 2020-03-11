@@ -13,10 +13,15 @@ interface ChartData {
 
 export interface BarChartProps {
     data: Array<ChartData>,
+    style: object,
+    strokeWidth: number,
+    strokeLinecap: 'round' | 'square' | 'butt'
     onSelect?(data?: ChartData): any,
 }
 
 export default function BarChart(props: BarChartProps) {
+
+    const { data, style, strokeWidth = 5, strokeLinecap = 'round' } = props
 
     const [selectedBar, setSelectedBar] = React.useState<ChartData>({
         key: null,
@@ -32,7 +37,7 @@ export default function BarChart(props: BarChartProps) {
     const [barMargin, setBarMargin] = React.useState(0)
 
     const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
-    const barChartData = props.data.map((chartData, index) => {
+    const barChartData = data.map((chartData, index) => {
         return {
             key: chartData.key,
             value: chartData.value,
@@ -44,12 +49,11 @@ export default function BarChart(props: BarChartProps) {
         }
     })
 
-    const total = props.data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
+    const total = data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
 
     const Labels = (args) => {
         const { x, y, bandwidth, data } = args
         const colors = data.map((barData) => barData.svg.fill)
-        const capHeight = 10
         const fontSize = 14
     
         let xPositions = []
@@ -63,21 +67,23 @@ export default function BarChart(props: BarChartProps) {
                         y={y(value)-fontSize}
                         fontSize={fontSize}
                         fontWeight={ selectedBar && selectedBar.key === key ? 'bold' : 'normal'}
-                        fill={  selectedBar && selectedBar.key === key ? palette.black : palette.gray_600}
+                        fill={  selectedBar && selectedBar.key === key ? palette.black : palette.gray_500}
                         alignmentBaseline={'middle'}
                         textAnchor={'middle'}
                     >
                         {(value / total * 100).toFixed(1) + '%'}
                     </Text>
-                    <Rect
-                        x={x(index)}
-                        y={y(value) - capHeight / 2 } // Subtract Height / 2 to make half of the Rect above the bar
-                        rx={capHeight / 2} // Set to Height / 2
-                        ry={capHeight / 2} // Set to Height / 2
-                        width={bandwidth}
-                        height={10} // Height of the Rect
-                        fill={colors[index]}
-                    />
+                    { strokeLinecap !== 'butt' &&
+                        <Rect
+                            x={x(index)}
+                            y={y(value) - strokeWidth }
+                            rx={ strokeLinecap === 'round' ? strokeWidth : undefined}
+                            ry={ strokeLinecap === 'round' ? strokeWidth : undefined}
+                            width={bandwidth}
+                            height={2*strokeWidth}
+                            fill={colors[index]}
+                        />
+                    }
                 </G>
             )
         })
@@ -97,13 +103,13 @@ export default function BarChart(props: BarChartProps) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() =>  setSelectedBar(null) }>
-        <View style={{ height: 250, flexDirection: 'row' }}>
+        <TouchableWithoutFeedback onPress={() => setSelectedBar(null) }>
+        <View style={{ height: 250, flexDirection: 'row', ...style }}>
             <YAxis
                 data={barChartData.map((chartData) => chartData.value)}
                 contentInset={{ top: 25, bottom: 70 }}
                 svg={{
-                    fill: 'grey',
+                    fill: palette.gray_500,
                     fontSize: 12,
                 }}
                 numberOfTicks={4}
@@ -142,7 +148,7 @@ export default function BarChart(props: BarChartProps) {
                                     <View style={{ flexGrow: 1 }}>
                                         <RNText
                                             numberOfLines={2}
-                                            style={{ textAlign: 'center', fontWeight: selectedBar && selectedBar.key === chartData.key ? 'bold' : 'normal' }}
+                                            style={{ color: selectedBar && selectedBar.key === chartData.key ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold' }}
                                         >
                                             {barChartData.map((chartData) => chartData.key)[index]}
                                         </RNText>
