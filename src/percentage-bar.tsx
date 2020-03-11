@@ -7,13 +7,20 @@ export interface PercentageBarProps {
   backgroundColor?: string,
   percentage: number,
   height?: number,
+  borderRadius?: number,
   style?: object
 }
 
 export default function PercentageBar(props: PercentageBarProps) {
-  const { color = palette.gray_200, backgroundColor = palette.gray_300, percentage = 0, height = 16, style } = props
+  const { 
+    color = palette.gray_200, 
+    backgroundColor = palette.gray_300, 
+    percentage = 0, 
+    height = 16,
+    borderRadius = 8,
+    style } = props
   return (
-    <View style={{ flexGrow: 1, height, backgroundColor, borderRadius: 8, overflow: 'hidden', ...style}}>
+    <View style={{ flexGrow: 1, height, backgroundColor, borderRadius, overflow: 'hidden', ...style}}>
       <View style={[styles.highlightedBar, { backgroundColor: color, width: `${percentage}%` }]}></View>
     </View>
   )

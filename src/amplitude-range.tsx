@@ -12,12 +12,22 @@ export interface AmplitudeRangeProps {
   influence: number,
   range: number,
   height?: number,
+  borderRadius?: number,
   style?: object
 }
 
 export default function AmplitudeRange(props: AmplitudeRangeProps) {
 
-  const { min = 0, max = 100, minAmplitude = 10, maxAmplitude = 90, color = palette.gray_200, height = 16, backgroundColor = palette.gray_300 } = props
+  const { 
+    min = 0, 
+    max = 100, 
+    minAmplitude = 10, 
+    maxAmplitude = 90, 
+    color = palette.gray_200, 
+    height = 16, 
+    borderRadius = 8,
+    backgroundColor = palette.gray_300
+  } = props
 
   const highlightedPercentage = `${Math.abs(maxAmplitude - minAmplitude) / Math.abs(max-min) * 100}%`
   
@@ -41,12 +51,12 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   }, [minAmplitude, maxAmplitude])
 
   return (
-    <View style={{ width: '100%', ...props.style }}>
+    <View style={{ flex: 1, ...props.style }}>
       <View style={{ 
           flexGrow: 1, 
           height, 
           backgroundColor, 
-          borderRadius: 8, 
+          borderRadius, 
           overflow: 'hidden'
         }}>
         {/* Highlighted Bar */}

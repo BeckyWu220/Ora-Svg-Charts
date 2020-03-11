@@ -5,19 +5,25 @@ import { palette } from './colors'
 export interface LevelBarProps {
   level: number,
   colors: Array<string>,
-  height: number,
+  height?: number,
+  borderRadius?: number,
   style: object
 }
 
 export default function LevelBar(props: LevelBarProps) {
-  const { level = 1, colors = [palette.blue_100, palette.blue_200, palette.blue_300, palette.blue_400, palette.blue_500], height = 24, style } = props
+  const { 
+    level = 1, 
+    colors = [palette.blue_100, palette.blue_200, palette.blue_300, palette.blue_400, palette.blue_500], 
+    height = 24,
+    borderRadius = 10, 
+    style } = props
 
   const container = React.useRef()
 
   const [barWidth, setBarWidth] = React.useState(0)
 
   return (
-    <View ref={container} style={{ flexDirection: 'row', width: '100%', ...props.style }} onLayout={() => {
+    <View ref={container} style={{ flexDirection: 'row', flex: 1, ...props.style }} onLayout={() => {
       container.current.measure((x, y, width, height) => {
         setBarWidth(width)
       })
@@ -29,10 +35,10 @@ export default function LevelBar(props: LevelBarProps) {
               styles.bar, 
               index < level ? { backgroundColor: color } : null,
               { 
-                borderTopLeftRadius: index === 0 ? 10 : 0, 
-                borderBottomLeftRadius: index === 0 ? 10 : 0,
-                borderTopRightRadius: index === colors.length - 1 ?  10 : 0, 
-                borderBottomRightRadius: index === colors.length - 1 ? 10 : 0 
+                borderTopLeftRadius: index === 0 ? borderRadius : 0, 
+                borderBottomLeftRadius: index === 0 ? borderRadius : 0,
+                borderTopRightRadius: index === colors.length - 1 ?  borderRadius : 0, 
+                borderBottomRightRadius: index === colors.length - 1 ? borderRadius : 0 
               }
             ]}
           >

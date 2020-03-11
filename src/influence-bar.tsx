@@ -8,12 +8,20 @@ export interface InfluenceBarProps {
   influence: number,
   range: number,
   height?: number,
+  borderRadius?: number,
   style?: object
 }
 
 export default function InfluenceBar(props: InfluenceBarProps) {
 
-  const { influence = 0, range = 100, color = palette.gray_200, height = 16, backgroundColor = palette.gray_300 } = props
+  const { 
+    influence = 0, 
+    range = 100, 
+    color = palette.gray_200, 
+    height = 16, 
+    borderRadius = 8,
+    backgroundColor = palette.gray_300
+  } = props
 
   const highlightedPercentage = `${Math.abs(influence) / (2 * Math.abs(range)) * 100}%`
   
@@ -42,12 +50,12 @@ export default function InfluenceBar(props: InfluenceBarProps) {
   }, [influence])
 
   return (
-    <View style={{ width: '100%', ...props.style }}>
+    <View style={{ flex: 1, ...props.style }}>
       <View style={{ 
           flexGrow: 1, 
           height, 
           backgroundColor, 
-          borderRadius: 8, 
+          borderRadius, 
           overflow: 'hidden'
         }}>
         {/* Highlighted Bar */}
