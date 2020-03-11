@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { palette } from './colors';
 
 export interface InfluenceBarProps {
   color?: string,
@@ -12,7 +13,7 @@ export interface InfluenceBarProps {
 
 export default function InfluenceBar(props: InfluenceBarProps) {
 
-  const { influence = 0, range = 100, color = '#63819B', height = 16, backgroundColor = '#E3E3E3' } = props
+  const { influence = 0, range = 100, color = palette.gray_200, height = 16, backgroundColor = palette.gray_300 } = props
 
   const highlightedPercentage = `${Math.abs(influence) / (2 * Math.abs(range)) * 100}%`
   
@@ -64,7 +65,7 @@ export default function InfluenceBar(props: InfluenceBarProps) {
         />
       </View>
       {/* Zero Marker and Zero Marker Text */}
-      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: '#A9A9A9', overflow: 'visible' }}></View>
+      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: palette.gray_500, overflow: 'visible' }}></View>
       <View style={[styles.markerTextContainer, { left: zeroMarkerPosition.x - 10 }]}>
         <Text style={[styles.markerText, styles.zeroMarkerText]}>0</Text>
       </View>
@@ -78,10 +79,10 @@ export default function InfluenceBar(props: InfluenceBarProps) {
 
 const styles = StyleSheet.create({
   zeroMarkerText: {
-    color: '#A9A9A9'
+    color: palette.gray_500
   },
   markerText: {
-    color: '#4A4A4A',
+    color: palette.gray_400,
     fontWeight: 'bold'
   },
   markerTextContainer: {

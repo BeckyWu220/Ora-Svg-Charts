@@ -2,8 +2,9 @@ import React from 'react';
 const ReactNative = require('react-native');
 const { View, Dimensions, Text: RNText, StyleSheet, TouchableWithoutFeedback } = ReactNative;
 // import { View, Dimensions, Text as RNText, StyleSheet } from 'react-native';
-import { PieChart as SVGPieChart } from 'react-native-svg-charts'
-import { Text } from 'react-native-svg'
+import { PieChart as SVGPieChart } from 'react-native-svg-charts';
+import { Text } from 'react-native-svg';
+import { palette } from './colors';
 
 interface ChartData {
     key: string,
@@ -27,7 +28,7 @@ export default function PieChart(props: PieChartProps) {
         props.onSelect && props.onSelect(selectedSlice)
     }, [selectedSlice])
 
-    const colors = ['#9EA8B7', '#7D6A80', '#74988C', '#3E5567', '#63819B']
+    const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
     const pieChartData = props.data.map((chartData, index) => {
         return {
             key: chartData.key,
@@ -57,7 +58,7 @@ export default function PieChart(props: PieChartProps) {
                     key={index}
                     x={pieCentroid[0]}
                     y={pieCentroid[1]}
-                    fill={'#FFFFFF'}
+                    fill={palette.white}
                     fontWeight={ selectedSlice && selectedSlice.key === data.key ? "bold" : "normal"}
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
@@ -103,6 +104,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 30,
-        color: '#262C33'
+        color: palette.gray_600
     }
 });

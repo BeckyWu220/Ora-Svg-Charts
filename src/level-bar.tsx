@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { palette } from './colors'
 
 export interface LevelBarProps {
   level: number,
@@ -9,7 +10,7 @@ export interface LevelBarProps {
 }
 
 export default function LevelBar(props: LevelBarProps) {
-  const { level = 1, colors = ['#C3C9CE', '#86939E', '#74828F', '#687480', '#4D6071'], height = 24, style } = props
+  const { level = 1, colors = [palette.blue_100, palette.blue_200, palette.blue_300, palette.blue_400, palette.blue_500], height = 24, style } = props
 
   const container = React.useRef()
 
@@ -54,10 +55,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F1F1F1'
+    backgroundColor: palette.gray_100
   },
   levelText: {
-    color: 'white',
+    color: palette.white,
     fontWeight: 'bold'
   }
 })

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { palette } from './colors';
 
 export interface AmplitudeRangeProps {
   color?: string,
@@ -16,7 +17,7 @@ export interface AmplitudeRangeProps {
 
 export default function AmplitudeRange(props: AmplitudeRangeProps) {
 
-  const { min = 0, max = 100, minAmplitude = 10, maxAmplitude = 90, color = '#63819B', height = 16, backgroundColor = '#E3E3E3' } = props
+  const { min = 0, max = 100, minAmplitude = 10, maxAmplitude = 90, color = palette.gray_200, height = 16, backgroundColor = palette.gray_300 } = props
 
   const highlightedPercentage = `${Math.abs(maxAmplitude - minAmplitude) / Math.abs(max-min) * 100}%`
   
@@ -73,7 +74,7 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
 
 const styles = StyleSheet.create({
   markerText: {
-    color: '#4A4A4A',
+    color: palette.gray_400,
     fontWeight: 'bold'
   },
   markerTextContainer: {

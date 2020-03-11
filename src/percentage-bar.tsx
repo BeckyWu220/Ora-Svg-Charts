@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { palette } from './colors';
 
 export interface PercentageBarProps {
   color?: string,
@@ -10,7 +11,7 @@ export interface PercentageBarProps {
 }
 
 export default function PercentageBar(props: PercentageBarProps) {
-  const { color = '#63819B', backgroundColor = '#E3E3E3', percentage = 0, height = 16, style } = props
+  const { color = palette.gray_200, backgroundColor = palette.gray_300, percentage = 0, height = 16, style } = props
   return (
     <View style={{ flexGrow: 1, height, backgroundColor, borderRadius: 8, overflow: 'hidden', ...style}}>
       <View style={[styles.highlightedBar, { backgroundColor: color, width: `${percentage}%` }]}></View>

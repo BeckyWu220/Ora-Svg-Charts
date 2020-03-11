@@ -3,6 +3,7 @@ const ReactNative = require('react-native');
 const { View, Image, Text: RNText, TouchableOpacity, TouchableWithoutFeedback } = ReactNative;
 import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
+import { palette } from './colors';
 
 interface ChartData {
     key: string,
@@ -30,7 +31,7 @@ export default function BarChart(props: BarChartProps) {
     const [positions, setPositions] = React.useState([])
     const [barMargin, setBarMargin] = React.useState(0)
 
-    const colors = ['#9EA8B7', '#7D6A80', '#74988C', '#3E5567', '#63819B']
+    const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
     const barChartData = props.data.map((chartData, index) => {
         return {
             key: chartData.key,
@@ -62,7 +63,7 @@ export default function BarChart(props: BarChartProps) {
                         y={y(value)-fontSize}
                         fontSize={fontSize}
                         fontWeight={ selectedBar && selectedBar.key === key ? 'bold' : 'normal'}
-                        fill={  selectedBar && selectedBar.key === key ? 'black' : 'gray'}
+                        fill={  selectedBar && selectedBar.key === key ? palette.black : palette.gray_600}
                         alignmentBaseline={'middle'}
                         textAnchor={'middle'}
                     >
@@ -118,7 +119,7 @@ export default function BarChart(props: BarChartProps) {
                     contentInset={{ top: 25, bottom: 10, left: 40, right: 40 }}
                     spacingInner={0.5}
                 >
-                    <Grid svg={{ stroke: '#e3e3e3' }} />
+                    <Grid svg={{ stroke: palette.gray_300 }} />
                     <Labels />
                 </SVGBarChart>
                 {   barWidth > 0 &&
