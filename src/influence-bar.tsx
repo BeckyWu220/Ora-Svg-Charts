@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, UIManager } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
 export interface InfluenceBarProps {
   color?: string,
@@ -11,78 +11,84 @@ export interface InfluenceBarProps {
 }
 
 export default function InfluenceBar(props: InfluenceBarProps) {
-  const highlightedPercentage = Math.abs(props.influence) / (2 * Math.abs(props.range || 100))
-  // console.tron.log('?', highlightedPercentage * 100 + '%')
+
+  const { influence = 0, range = 100, color = '#63819B', height = 16, backgroundColor = '#E3E3E3' } = props
+
+  const highlightedPercentage = `${Math.abs(influence) / (2 * Math.abs(range)) * 100}%`
   
-  const offset = (Math.abs(props.range || 100) - Math.abs(props.influence)) / 2 * (Math.abs(props.range || 100))
-  // console.tron.log('offset', offset + '%')
+  const offset = (Math.abs(range) - Math.abs(influence)) / 2 * Math.abs(range)
 
-  const [zeroMarkerPosition, setZeroMarkerPosition] = React.useState({
+  const initialMarkPosition = {
     x: 0,
     y: 0,
     width: 0,
     height: 0,
-  })
+  }
 
-  const [valueMarkerPosition, setValueMarkerPosition] = React.useState({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  })
+  const [zeroMarkerPosition, setZeroMarkerPosition] = React.useState(initialMarkPosition)
+  const [valueMarkerPosition, setValueMarkerPosition] = React.useState(initialMarkPosition)
 
   const zeroMarker = React.useRef()
   const highlightedBar = React.useRef()
 
   React.useEffect(() => {
-    // console.tron.log('useEffect', props.influence)
     zeroMarker.current.measure((x, y, width, height) => {
-      // console.tron.log('measure: ', x, y, width, height)
       setZeroMarkerPosition({ x, y, width, height })
     })
     highlightedBar.current.measure((x, y, width, height) => {
-      console.tron.log('!!!measure: ', x, y, width, height)
       setValueMarkerPosition({ x, y, width, height })
     })
-  }, [props.influence])
+  }, [influence])
 
-  //console.tron.log('highlighted percentage:', highlightedPercentage)
   return (
     <View style={{ width: '100%', ...props.style }}>
-      <View style={{ flexGrow: 1, height: props.height || 16, backgroundColor: props.backgroundColor || '#e3e3e3', borderRadius: 8, overflow: 'hidden'}}>
+      <View style={{ 
+          flexGrow: 1, 
+          height, 
+          backgroundColor, 
+          borderRadius: 8, 
+          overflow: 'hidden'
+        }}>
+        {/* Highlighted Bar */}
         <View
           ref={highlightedBar}
           style={{
             position: 'absolute', 
-            left: props.influence < 0 ? (`${offset < 100 ? offset : 100}%`) : '50%', 
-            right: props.influence > 0 ? `${offset < 100 ? offset : 100}%` : '50%', 
             top: 0, 
             bottom: 0, 
-            backgroundColor: props.color || '#63819B', 
-            width: `${highlightedPercentage*100}%` }}
+            backgroundColor: color,
+            left: influence < 0 ? (`${offset < 100 ? offset : 100}%`) : '50%', 
+            right: influence > 0 ? `${offset < 100 ? offset : 100}%` : '50%', 
+            width: highlightedPercentage 
+          }}
         />
       </View>
-      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: 'red', overflow: 'visible' }}></View>
-      <View style={{ position: 'absolute', left: zeroMarkerPosition.x - 10, top: 20, width: 20, backgroundColor: 'red', overflow: 'visible', alignItems: 'center' }}>
-        <Text>0</Text>
+      {/* Zero Marker and Zero Marker Text */}
+      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: '#A9A9A9', overflow: 'visible' }}></View>
+      <View style={[styles.markerTextContainer, { left: zeroMarkerPosition.x - 10 }]}>
+        <Text style={[styles.markerText, styles.zeroMarkerText]}>0</Text>
       </View>
-      { props.influence < 0 &&
-        <View style={{ position: 'absolute' }}>
-          <View style={{ position: 'absolute', left: valueMarkerPosition.x, top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: 'green', overflow: 'visible' }}></View>
-          <View style={{ position: 'absolute', left: valueMarkerPosition.x - 10, top: 20, width: 20, backgroundColor: 'green', overflow: 'visible', alignItems: 'center' }}>
-              <Text>{props.influence}</Text>
-          </View>
-        </View>
-      }
-      {
-        props.influence > 0 && 
-        <View style={{ position: 'absolute' }}>
-          <View style={{ position: 'absolute', left: valueMarkerPosition.x + valueMarkerPosition.width, top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: 'green', overflow: 'visible' }}></View>
-          <View style={{ position: 'absolute', left: valueMarkerPosition.x + valueMarkerPosition.width - 10, top: 20, width: 20, backgroundColor: 'green', overflow: 'visible', alignItems: 'center' }}>
-              <Text>{props.influence}</Text>
-          </View>
-        </View>
-      }
+      {/* Influence Marker Text */}
+      <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 + ( influence > 0 && valueMarkerPosition.width) }]}>
+        <Text style={styles.markerText}>{influence}</Text>
+      </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  zeroMarkerText: {
+    color: '#A9A9A9'
+  },
+  markerText: {
+    color: '#4A4A4A',
+    fontWeight: 'bold'
+  },
+  markerTextContainer: {
+    position: 'absolute', 
+    top: 14, 
+    width: 20, 
+    overflow: 'visible', 
+    alignItems: 'center'
+  }
+})
