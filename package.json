@@ -2,12 +2,35 @@
   "name": "ora-svg-charts",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "lib/module/index.js",
   "keywords": [],
   "author": "Becky Wu",
   "license": "MIT",
   "dependencies": {
     "react-native-svg": "9.13.3",
-    "react-native-svg-charts": "5.2.0"
-  }
+    "react-native-svg-charts": "https://github.com/BeckyWu220/react-native-svg-charts.git#bundle"
+  },
+  "devDependencies": {
+    "@react-native-community/bob": "^0.10.0"
+  },
+  "react-native": "src/index.ts",
+  "module": "lib/module/index.js",
+  "scripts": {
+    "prepare": "bob build"
+  },
+  "files": [
+    "src",
+    "lib"
+  ],
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "module"
+    ]
+  },
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ]
 }

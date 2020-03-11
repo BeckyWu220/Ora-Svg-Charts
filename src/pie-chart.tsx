@@ -1,9 +1,10 @@
 import React from 'react';
 const ReactNative = require('react-native');
-const { View, Dimensions, Text: RNText, StyleSheet } = ReactNative;
+const { View, Text: RNText, StyleSheet, TouchableWithoutFeedback } = ReactNative;
 // import { View, Dimensions, Text as RNText, StyleSheet } from 'react-native';
-import { PieChart as SVGPieChart } from 'react-native-svg-charts'
-import { Text } from 'react-native-svg'
+import { PieChart as SVGPieChart } from 'react-native-svg-charts';
+import { Text } from 'react-native-svg';
+import { palette } from './colors';
 
 interface ChartData {
     key: string,
@@ -12,45 +13,44 @@ interface ChartData {
 }
 
 export interface PieChartProps {
-    data: Array<ChartData>
+    data: Array<ChartData>,
+    onSelect?(data?: ChartData): any,
+    style: object,
 }
 
 export default function PieChart(props: PieChartProps) {
 
-    const [selectedSlice, setSelectedSlice] = React.useState({
-        label: '',
-        value: 0
+    const { data, style } = props
+
+    const [selectedSlice, setSelectedSlice] = React.useState<ChartData>({
+        key: null,
+        value: null
     })
 
-    const { label } = selectedSlice
+    React.useEffect(() => {
+        props.onSelect && props.onSelect(selectedSlice)
+    }, [selectedSlice])
 
-    const colors = ['#9EA8B7', '#7D6A80', '#74988C', '#3E5567', '#63819B']
-    const pieChartData = props.data.map((chartData, index) => {
+    const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
+    const pieChartData = data.map((chartData, index) => {
         return {
             key: chartData.key,
             value: chartData.value,
             svg: {
                 fill: chartData.color || colors[index],
-                onClick: () => setSelectedSlice({
-                    label: chartData.key,
-                    value: chartData.value
-                })
+                onClick: () => setSelectedSlice(chartData)
             },
             arc: {
-                outerRadius: selectedSlice.label === chartData.key ? '100%' : '80%',
+                outerRadius: selectedSlice && selectedSlice.key === chartData.key ? '100%' : '80%',
                 padAngle: 0,
             },
-            onPress: () => setSelectedSlice({
-                label: chartData.key,
-                value: chartData.value
-            })
+            onPress: () => setSelectedSlice(chartData)
         }
     })
 
-    const [labelWidth, setLabelWidth] = React.useState(0)
-    const deviceWidth = Dimensions.get('window').width
+    const [chartWidth, setChartWidth] = React.useState(0)
 
-    const total = props.data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
+    const total = data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
 
     const Labels = ({ slices }) => {
         return slices.map((slice, index) => {
@@ -60,52 +60,63 @@ export default function PieChart(props: PieChartProps) {
                     key={index}
                     x={pieCentroid[0]}
                     y={pieCentroid[1]}
-                    fill={'#FFFFFF'}
-                    fontWeight={ selectedSlice.label === data.key ? "bold" : undefined}
+                    fill={palette.white}
+                    fontWeight={ selectedSlice && selectedSlice.key === data.key ? "bold" : "normal"}
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
                     fontSize={14}
                 >
-                    {(data.value / total * 100).toFixed(2) + '%'}
+                    {(data.value / total * 100).toFixed(1) + '%'}
                 </Text>
             )
         })
     }
 
+    const chartRef = React.useRef()
+
+    const innerRadiusRatio = 0.35
+
     return (
-        <View style={styles.container}>
-        <View style={{ justifyContent: 'center' }}>
-            <SVGPieChart
-                style={{ height: 400 }}
-                outerRadius={'80%'}
-                innerRadius={'40%'}
-                data={pieChartData}
-                valueAccessor={({ item }) => item.value}
-            >
-                <Labels/>
-            </SVGPieChart>
-            <RNText
-                onLayout={({ nativeEvent: { layout: { width } } }) => {
-                    setLabelWidth(width)
-                }}
-                style={[styles.text, { left: deviceWidth / 2 - labelWidth / 2 }]}>
-                { selectedSlice && label }
-            </RNText>
-        </View>
-      </View>
+        <TouchableWithoutFeedback onPress={() => setSelectedSlice(null)}>
+            <View ref={chartRef} style={{ justifyContent: 'center', height: 360, ...style }}>
+                <SVGPieChart
+                    style={{ flex: 1 }}
+                    outerRadius={'80%'}
+                    innerRadius={`${innerRadiusRatio * 100}%`}
+                    data={pieChartData}
+                    valueAccessor={({ item }) => item.value}
+                >
+                    <Labels/>
+                </SVGPieChart>
+                <View
+                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2, width: innerRadiusRatio * chartWidth }]}
+                    onLayout={() => {
+                        chartRef.current.measure((x, y, width, height) => {
+                            setChartWidth(width)
+                        })
+                    }}
+                >
+                    <RNText
+                        numberOfLines={2}
+                        style={styles.text}
+                        >
+                        { selectedSlice && selectedSlice.key ? selectedSlice.key : '' }
+                    </RNText>
+                </View>
+            </View>
+        </TouchableWithoutFeedback>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-      width: '100%',
-      height: '100%',
+    textContainer: {
+        position: 'absolute',
+        padding: 10
     },
     text: {
-        position: 'absolute',
         textAlign: 'center',
+        fontSize: 16,
         fontWeight: 'bold',
-        fontSize: 30,
-        color: '#262C33'
+        color: palette.gray_600,
     }
 });
