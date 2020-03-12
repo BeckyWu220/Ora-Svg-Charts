@@ -34,8 +34,8 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const offset = `${Math.abs(minAmplitude - min) /Math.abs(max-min) * 100}%`
 
   const initialMarkPosition = {
-    x: 0,
-    y: 0,
+    x: null,
+    y: null,
     width: 0,
     height: 0,
   }
@@ -45,14 +45,16 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const highlightedBar = React.useRef()
   const container = React.useRef()
 
-  React.useEffect(() => {
-    highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
-      setValueMarkerPosition({ x, y, width, height })
-    })
-  }, [minAmplitude, maxAmplitude])
-
   return (
-    <View ref={container} style={{ flex: 1, ...props.style }}>
+    <View
+      ref={container}
+      style={{ flex: 1, ...props.style }}
+      onLayout={() => {
+        highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
+          setValueMarkerPosition({ x, y, width, height })
+        })
+      }}
+    >
       <View style={{ 
           flexGrow: 1, 
           height, 
@@ -74,10 +76,10 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
         />
       </View>
       <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 }]}>
-        <Text style={styles.markerText}>{minAmplitude}</Text>
+        { valueMarkerPosition.x !== null && <Text style={styles.markerText}>{minAmplitude}</Text> }
       </View>
       <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 + valueMarkerPosition.width }]}>
-        <Text style={styles.markerText}>{maxAmplitude}</Text>
+        { valueMarkerPosition.x !== null && <Text style={styles.markerText}>{maxAmplitude}</Text> }
       </View>
     </View>
   )
