@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, findNodeHandle } from 'react-native';
 import { palette } from './colors';
 
 export interface AmplitudeRangeProps {
@@ -43,15 +43,16 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const [valueMarkerPosition, setValueMarkerPosition] = React.useState(initialMarkPosition)
 
   const highlightedBar = React.useRef()
+  const container = React.useRef()
 
   React.useEffect(() => {
-    highlightedBar.current.measure((x, y, width, height) => {
+    highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
       setValueMarkerPosition({ x, y, width, height })
     })
   }, [minAmplitude, maxAmplitude])
 
   return (
-    <View style={{ flex: 1, ...props.style }}>
+    <View ref={container} style={{ flex: 1, ...props.style }}>
       <View style={{ 
           flexGrow: 1, 
           height, 

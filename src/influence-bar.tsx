@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, findNodeHandle } from 'react-native';
 import { palette } from './colors';
 
 export interface InfluenceBarProps {
@@ -39,18 +39,19 @@ export default function InfluenceBar(props: InfluenceBarProps) {
 
   const zeroMarker = React.useRef()
   const highlightedBar = React.useRef()
+  const container = React.useRef()
 
   React.useEffect(() => {
-    zeroMarker.current.measure((x, y, width, height) => {
+    zeroMarker.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
       setZeroMarkerPosition({ x, y, width, height })
     })
-    highlightedBar.current.measure((x, y, width, height) => {
+    highlightedBar.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
       setValueMarkerPosition({ x, y, width, height })
     })
   }, [influence])
 
   return (
-    <View style={{ flex: 1, ...props.style }}>
+    <View ref={container} style={{ flex: 1, ...props.style }}>
       <View style={{ 
           flexGrow: 1, 
           height, 
