@@ -28,8 +28,8 @@ export default function InfluenceBar(props: InfluenceBarProps) {
   const offset = (Math.abs(range) - Math.abs(influence)) / 2 * Math.abs(range)
 
   const initialMarkPosition = {
-    x: 0,
-    y: 0,
+    x: null,
+    y: null,
     width: 0,
     height: 0,
   }
@@ -41,17 +41,19 @@ export default function InfluenceBar(props: InfluenceBarProps) {
   const highlightedBar = React.useRef()
   const container = React.useRef()
 
-  React.useEffect(() => {
-    zeroMarker.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
-      setZeroMarkerPosition({ x, y, width, height })
-    })
-    highlightedBar.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
-      setValueMarkerPosition({ x, y, width, height })
-    })
-  }, [influence])
-
   return (
-    <View ref={container} style={{ flex: 1, ...props.style }}>
+    <View
+      ref={container}
+      style={{ flex: 1, ...props.style }}
+      onLayout={() => {
+        zeroMarker.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
+          setZeroMarkerPosition({ x, y, width, height })
+        })
+        highlightedBar.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
+          setValueMarkerPosition({ x, y, width, height })
+        })
+      }}
+    >
       <View style={{ 
           flexGrow: 1, 
           height, 
@@ -74,14 +76,14 @@ export default function InfluenceBar(props: InfluenceBarProps) {
         />
       </View>
       {/* Zero Marker and Zero Marker Text */}
-      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: palette.gray_500, overflow: 'visible' }}></View>
+      <View ref={zeroMarker} style={{ position: 'absolute', left: '50%', top: -props.height * 0.5 / 2, width: 2, height: props.height * 1.5, backgroundColor: palette.gray_500, overflow: 'visible' }}/>
       <View style={[styles.markerTextContainer, { left: zeroMarkerPosition.x - 10 }]}>
-        <Text style={[styles.markerText, styles.zeroMarkerText]}>0</Text>
+        { zeroMarkerPosition.x !== null && <Text style={[styles.markerText, styles.zeroMarkerText]}>0</Text> }
       </View>
       {/* Influence Marker Text */}
-      <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 + ( influence > 0 && valueMarkerPosition.width) }]}>
-        <Text style={styles.markerText}>{influence}</Text>
-      </View>
+      {<View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 + ( influence > 0 && valueMarkerPosition.width) }]}>
+        { valueMarkerPosition.x !== null && <Text style={styles.markerText}>{influence}</Text> }
+      </View>}
     </View>
   )
 }
