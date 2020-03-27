@@ -1907,9 +1907,9 @@ minimatch@^3.0.4:
     brace-expansion "^1.1.7"
 
 minimist@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
-  integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
+  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
 ms@^2.1.1:
   version "2.1.2"
@@ -2116,10 +2116,10 @@ react-is@^16.8.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.0.tgz#0f37c3613c34fe6b37cd7f763a0d6293ab15c527"
   integrity sha512-GFMtL0vHkiBv9HluwNZTggSn/sCyEt9n02aM0dSAjGGyqyNlAyftYm4phPxdvCigG15JreC5biwxCgTAJZ7yAA==
 
-react-native-svg-charts@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/react-native-svg-charts/-/react-native-svg-charts-5.2.0.tgz#eda090136250d02f9d1d8c971663afaee4ed2f4f"
-  integrity sha512-2cV9/QDqXdq9ve1NbTAKVO9BQrYqC69R5Tlo+LgGAIdl6BEVQbushO20vJkN4+d680KKUemyode0yJ7gNwdZNQ==
+"react-native-svg-charts@https://github.com/BeckyWu220/react-native-svg-charts.git#bundle":
+  version "5.3.0"
+  uid "6297774e08ef1add3c6dcf44dc80f39357606d77"
+  resolved "https://github.com/BeckyWu220/react-native-svg-charts.git#6297774e08ef1add3c6dcf44dc80f39357606d77"
   dependencies:
     d3-array "^1.2.0"
     d3-interpolate-path "2.0.0"
