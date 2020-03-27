@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "react-native-svg": "9.13.3",
-    "react-native-svg-charts": "https://github.com/BeckyWu220/react-native-svg-charts.git#bundle"
+    "react-native-svg-charts": "https://github.com/BeckyWu220/react-native-svg-charts.git"
   },
   "devDependencies": {
     "@react-native-community/bob": "^0.10.0"
