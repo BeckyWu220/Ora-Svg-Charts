@@ -8,7 +8,8 @@ import { palette } from './colors';
 interface ChartData {
     key: string,
     value: number,
-    color?: string
+    color?: string,
+    imageUri?: string,
 }
 
 export interface BarChartProps {
@@ -48,6 +49,7 @@ export default function BarChart(props: BarChartProps) {
                 onClick: () => setSelectedBar(chartData), // Make sure the svg is clickable in web app.
                 onPress: () => setSelectedBar(chartData)
             },
+            imageUri: chartData.imageUri
         }
     })
 
@@ -143,7 +145,7 @@ export default function BarChart(props: BarChartProps) {
                                         <Image
                                             style={{width: '100%', height: '100%', opacity: selectedBar && selectedBar.key === chartData.key ? 1 : 0.5}}
                                             resizeMode={"cover"}
-                                            source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                                            source={{uri: chartData.imageUri || 'https://reactnative.dev/img/tiny_logo.png'}}
                                         />
                                     </TouchableOpacity>
                                     <View style={{ flexGrow: 1 }}>
