@@ -17,20 +17,22 @@ export interface BarChartProps {
     strokeWidth: number,
     strokeLinecap: 'round' | 'square' | 'butt'
     onSelect?(data?: ChartData): any,
+    selectedBarIndex: number,
 }
 
 export default function BarChart(props: BarChartProps) {
 
-    const { data, style, strokeWidth = 5, strokeLinecap = 'round' } = props
+    const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedBarIndex = 0 } = props
 
-    const [selectedBar, setSelectedBar] = React.useState<ChartData>({
-        key: null,
-        value: null
-    })
+    const [selectedBar, setSelectedBar] = React.useState<ChartData>(data[selectedBarIndex])
 
     React.useEffect(() => {
         props.onSelect && props.onSelect(selectedBar)
     }, [selectedBar])
+
+    React.useEffect(() => {
+        setSelectedBar(data[selectedBarIndex])
+    }, [selectedBarIndex])
 
     const [barWidth, setBarWidth] = React.useState(0)
     const [positions, setPositions] = React.useState([])
@@ -103,7 +105,6 @@ export default function BarChart(props: BarChartProps) {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={() => setSelectedBar(null) }>
         <View style={{ height: 250, flexDirection: 'row', ...style }}>
             <YAxis
                 data={barChartData.map((chartData) => chartData.value)}
@@ -161,6 +162,5 @@ export default function BarChart(props: BarChartProps) {
                 }
             </View>
         </View>
-        </TouchableWithoutFeedback>
     )
 }
