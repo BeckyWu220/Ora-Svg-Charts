@@ -53,8 +53,6 @@ export default function BarChart(props: BarChartProps) {
         }
     })
 
-    const total = data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
-
     const Labels = (args) => {
         const { x, y, bandwidth, data } = args
         const colors = data.map((barData) => barData.svg.fill)
@@ -75,7 +73,7 @@ export default function BarChart(props: BarChartProps) {
                         alignmentBaseline={'middle'}
                         textAnchor={'middle'}
                     >
-                        {(value / total * 100).toFixed(1) + '%'}
+                        {value.toFixed(1) + '%'}
                     </Text>
                     { strokeLinecap !== 'butt' &&
                         <Rect
@@ -117,7 +115,7 @@ export default function BarChart(props: BarChartProps) {
                 }}
                 numberOfTicks={4}
                 min={0}
-                formatLabel={(value) => `${(value / total * 100).toFixed(0)}%`}
+                formatLabel={(value) => `${value.toFixed(0)}%`}
             />
             <View style={{ flexGrow: 1 }}>
                 <SVGBarChart
