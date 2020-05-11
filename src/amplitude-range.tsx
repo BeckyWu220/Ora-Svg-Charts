@@ -45,6 +45,12 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const highlightedBar = React.useRef()
   const container = React.useRef()
 
+  React.useEffect(() => {
+    highlightedBar.current && highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
+      setValueMarkerPosition({ x, y, width, height })
+    })
+  }, [ minAmplitude, maxAmplitude ])
+
   return (
     <View
       ref={container}
