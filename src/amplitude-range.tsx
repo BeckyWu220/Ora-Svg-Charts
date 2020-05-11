@@ -21,8 +21,8 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const { 
     min = 0, 
     max = 100, 
-    minAmplitude = 10, 
-    maxAmplitude = 90, 
+    minAmplitude = 0, 
+    maxAmplitude = 100, 
     color = palette.gray_200, 
     height = 16, 
     borderRadius = 8,
@@ -45,20 +45,33 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
   const highlightedBar = React.useRef()
   const container = React.useRef()
 
-  React.useEffect(() => {
+  const measureHighlightedBar = () => {
     highlightedBar.current && highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
       setValueMarkerPosition({ x, y, width, height })
+      let minValueMarkerPositionX = x - 10
+      let maxValueMarkerPositionX = x - 10 + width
+      if (maxValueMarkerPositionX - minValueMarkerPositionX <= 40) {
+        minValueMarkerPositionX = x + width * 0.5 - 20
+        maxValueMarkerPositionX = x + width * 0.5
+      }
+      setMinMarkerPositionX(minValueMarkerPositionX)
+      setMaxMarkerPositionX(maxValueMarkerPositionX)
     })
+  }
+
+  React.useEffect(() => {
+    measureHighlightedBar()
   }, [ minAmplitude, maxAmplitude ])
+
+  const [minMarkerPositionX, setMinMarkerPositionX] = React.useState(null)
+  const [maxMarkerPositionX, setMaxMarkerPositionX] = React.useState(null)
 
   return (
     <View
       ref={container}
       style={{ flex: 1, ...props.style }}
       onLayout={() => {
-        highlightedBar.current.measureLayout(findNodeHandle(container.current), (x, y, width, height) => {
-          setValueMarkerPosition({ x, y, width, height })
-        })
+        measureHighlightedBar()
       }}
     >
       <View style={{ 
@@ -81,10 +94,10 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
           }}
         />
       </View>
-      <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 }]}>
+      <View style={[styles.markerTextContainer, { left: minMarkerPositionX }]}>
         { valueMarkerPosition.x !== null && <Text style={styles.markerText}>{minAmplitude}</Text> }
       </View>
-      <View style={[styles.markerTextContainer, { left: valueMarkerPosition.x - 10 + valueMarkerPosition.width }]}>
+      <View style={[styles.markerTextContainer, { left: maxMarkerPositionX }]}>
         { valueMarkerPosition.x !== null && <Text style={styles.markerText}>{maxAmplitude}</Text> }
       </View>
     </View>
