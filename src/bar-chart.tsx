@@ -134,18 +134,20 @@ export default function BarChart(props: BarChartProps) {
                         { barChartData.map((chartData, index) => {
                             return (
                                 <View key={index} style={{ width: barWidth + 2 * barMargin, height: '100%', position: 'absolute', left: positions[index] - barMargin }}>
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            setSelectedBar(chartData)
-                                        }}
-                                        style={{ width: barWidth, height: barWidth, borderRadius: barWidth/2, overflow: 'hidden', alignSelf: 'center', maxWidth: 40, maxHeight: 40 }}
-                                    >
-                                        <Image
-                                            style={{width: '100%', height: '100%', opacity: selectedBar && selectedBar.key === chartData.key ? 1 : 0.5}}
-                                            resizeMode={"cover"}
-                                            source={{uri: chartData.imageUri || 'https://reactnative.dev/img/tiny_logo.png'}}
-                                        />
-                                    </TouchableOpacity>
+                                    {   chartData.imageUri &&
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                setSelectedBar(chartData)
+                                            }}
+                                            style={{ width: barWidth, height: barWidth, borderRadius: barWidth/2, overflow: 'hidden', alignSelf: 'center', maxWidth: 40, maxHeight: 40 }}
+                                        >
+                                            <Image
+                                                style={{width: '100%', height: '100%', opacity: selectedBar && selectedBar.key === chartData.key ? 1 : 0.5}}
+                                                resizeMode={"cover"}
+                                                source={chartData.imageUri}
+                                            />
+                                        </TouchableOpacity>
+                                    }
                                     <View style={{ flexGrow: 1 }}>
                                         <RNText
                                             numberOfLines={2}
