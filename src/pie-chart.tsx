@@ -22,14 +22,11 @@ export default function PieChart(props: PieChartProps) {
 
     const { data, style } = props
 
-    const [selectedSlice, setSelectedSlice] = React.useState<ChartData>({
-        key: null,
-        value: null
-    })
+    const [selectedSliceIndex, setSelectedSliceIndex] = React.useState(null)
 
     React.useEffect(() => {
-        props.onSelect && props.onSelect(selectedSlice)
-    }, [selectedSlice])
+        props.onSelect && props.onSelect(selectedSliceIndex)
+    }, [selectedSliceIndex])
 
     const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
     const pieChartData = data.map((chartData, index) => {
@@ -38,13 +35,17 @@ export default function PieChart(props: PieChartProps) {
             value: chartData.value,
             svg: {
                 fill: chartData.color || colors[index],
-                onClick: () => setSelectedSlice(chartData)
+                onClick: () => {
+                    setSelectedSliceIndex(index)
+                }
             },
             arc: {
-                outerRadius: selectedSlice && selectedSlice.key === chartData.key ? '100%' : '80%',
+                outerRadius: selectedSliceIndex === index ? '100%' : '80%',
                 padAngle: 0,
             },
-            onPress: () => setSelectedSlice(chartData)
+            onPress: () => {
+                setSelectedSliceIndex(index)
+            }
         }
     })
 
@@ -61,7 +62,7 @@ export default function PieChart(props: PieChartProps) {
                     x={pieCentroid[0]}
                     y={pieCentroid[1]}
                     fill={palette.white}
-                    fontWeight={ selectedSlice && selectedSlice.key === data.key ? "bold" : "normal"}
+                    fontWeight={ selectedSliceIndex === index ? "bold" : "normal"}
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
                     fontSize={14}
@@ -77,7 +78,9 @@ export default function PieChart(props: PieChartProps) {
     const innerRadiusRatio = 0.35
 
     return (
-        <TouchableWithoutFeedback onPress={() => setSelectedSlice(null)}>
+        <TouchableWithoutFeedback onPress={() => {
+            setSelectedSliceIndex(null)
+        }}>
             <View ref={chartRef} style={{ justifyContent: 'center', height: 360, ...style }}>
                 <SVGPieChart
                     style={{ flex: 1 }}
@@ -100,7 +103,7 @@ export default function PieChart(props: PieChartProps) {
                         numberOfLines={2}
                         style={styles.text}
                         >
-                        { selectedSlice && selectedSlice.key ? selectedSlice.key : '' }
+                        { selectedSliceIndex !== null && data[selectedSliceIndex].key ?  data[selectedSliceIndex].key : '' }
                     </RNText>
                 </View>
             </View>
