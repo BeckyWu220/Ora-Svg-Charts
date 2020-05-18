@@ -41,6 +41,16 @@ export default function InfluenceBar(props: InfluenceBarProps) {
   const highlightedBar = React.useRef()
   const container = React.useRef()
 
+  const measureHighlightedBar = () => {
+    highlightedBar.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
+      setValueMarkerPosition({ x, y, width, height })
+    })
+  }
+
+  React.useEffect(() => {
+    measureHighlightedBar()
+  }, [influence])
+
   return (
     <View
       ref={container}
@@ -49,9 +59,7 @@ export default function InfluenceBar(props: InfluenceBarProps) {
         zeroMarker.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
           setZeroMarkerPosition({ x, y, width, height })
         })
-        highlightedBar.current.measureLayout(findNodeHandle(container.current),(x, y, width, height) => {
-          setValueMarkerPosition({ x, y, width, height })
-        })
+        measureHighlightedBar()
       }}
     >
       <View style={{ 
