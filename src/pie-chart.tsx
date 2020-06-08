@@ -51,8 +51,6 @@ export default function PieChart(props: PieChartProps) {
 
     const [chartWidth, setChartWidth] = React.useState(0)
 
-    const total = data.map(chartData => chartData.value).reduce((a, b) => a + b, 0)
-
     const Labels = ({ slices }) => {
         return slices.map((slice, index) => {
             const { pieCentroid, data } = slice;
@@ -67,7 +65,7 @@ export default function PieChart(props: PieChartProps) {
                     alignmentBaseline={'middle'}
                     fontSize={14}
                 >
-                    {(data.value / total * 100).toFixed(1) + '%'}
+                    {data.value.toFixed(1) + '%'}
                 </Text>
             )
         })
