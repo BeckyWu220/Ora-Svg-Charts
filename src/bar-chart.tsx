@@ -17,23 +17,24 @@ export interface BarChartProps {
     style: object,
     strokeWidth: number,
     strokeLinecap: 'round' | 'square' | 'butt'
-    onSelect?(data?: ChartData): any,
-    selectedBarIndex: number,
+    onSelect?(index: number): any,
+    selectedIndex: number,
 }
 
 export default function BarChart(props: BarChartProps) {
 
-    const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedBarIndex = 0 } = props
+    const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedIndex = 0 } = props
 
-    const [selectedBar, setSelectedBar] = React.useState<ChartData>(data[selectedBarIndex])
+    const [selectedBarIndex, setSelectedBarIndex] = React.useState<number>(selectedIndex)
+
+    const onSelectBar = (barIndex) => {
+        setSelectedBarIndex(barIndex)
+        props.onSelect && props.onSelect(barIndex)
+    }
 
     React.useEffect(() => {
-        props.onSelect && props.onSelect(selectedBar)
-    }, [selectedBar])
-
-    React.useEffect(() => {
-        setSelectedBar(data[selectedBarIndex])
-    }, [selectedBarIndex])
+        setSelectedBarIndex(selectedIndex)
+    }, [selectedIndex])
 
     const [barWidth, setBarWidth] = React.useState(0)
     const [positions, setPositions] = React.useState([])
@@ -46,8 +47,8 @@ export default function BarChart(props: BarChartProps) {
             value: chartData.value,
             svg: {
                 fill: chartData.color || colors[index],
-                onClick: () => setSelectedBar(chartData), // Make sure the svg is clickable in web app.
-                onPress: () => setSelectedBar(chartData)
+                onClick: () => onSelectBar(index), // Make sure the svg is clickable in web app.
+                onPress: () => onSelectBar(index)
             },
             imageUri: chartData.imageUri
         }
@@ -68,8 +69,8 @@ export default function BarChart(props: BarChartProps) {
                         x={x(index) + (bandwidth / 2)}
                         y={y(value)-fontSize}
                         fontSize={fontSize}
-                        fontWeight={ selectedBar && selectedBar.key === key ? 'bold' : 'normal'}
-                        fill={  selectedBar && selectedBar.key === key ? palette.black : palette.gray_500}
+                        fontWeight={ selectedBarIndex !== null && selectedBarIndex === index ? 'bold' : 'normal'}
+                        fill={  selectedBarIndex !== null && selectedBarIndex === index ? palette.black : palette.gray_500}
                         alignmentBaseline={'middle'}
                         textAnchor={'middle'}
                     >
@@ -136,13 +137,11 @@ export default function BarChart(props: BarChartProps) {
                                 <View key={index} style={{ width: barWidth + 2 * barMargin, height: '100%', position: 'absolute', left: positions[index] - barMargin }}>
                                     {   chartData.imageUri &&
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                setSelectedBar(chartData)
-                                            }}
+                                            onPress={() => onSelectBar(index)}
                                             style={{ width: barWidth, height: barWidth, borderRadius: barWidth/2, overflow: 'hidden', alignSelf: 'center', maxWidth: 40, maxHeight: 40 }}
                                         >
                                             <Image
-                                                style={{width: '100%', height: '100%', opacity: selectedBar && selectedBar.key === chartData.key ? 1 : 0.5}}
+                                                style={{width: '100%', height: '100%', opacity: selectedBarIndex !== null && selectedBarIndex === index ? 1 : 0.5}}
                                                 resizeMode={"cover"}
                                                 source={chartData.imageUri}
                                             />
@@ -151,7 +150,7 @@ export default function BarChart(props: BarChartProps) {
                                     <View style={{ flexGrow: 1 }}>
                                         <RNText
                                             numberOfLines={2}
-                                            style={{ color: selectedBar && selectedBar.key === chartData.key ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold' }}
+                                            style={{ color: selectedBarIndex !== null && selectedBarIndex === index ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold' }}
                                         >
                                             {barChartData.map((chartData) => chartData.key)[index]}
                                         </RNText>
