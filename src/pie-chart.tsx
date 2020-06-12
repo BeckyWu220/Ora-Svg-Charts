@@ -4,7 +4,7 @@ const { View, Text: RNText, StyleSheet, TouchableWithoutFeedback } = ReactNative
 // import { View, Dimensions, Text as RNText, StyleSheet } from 'react-native';
 import { PieChart as SVGPieChart } from 'react-native-svg-charts';
 import { Text } from 'react-native-svg';
-import { palette } from './colors';
+import { palette, getRandomColor } from './colors';
 
 interface ChartData {
     key: string,
@@ -20,6 +20,8 @@ export interface PieChartProps {
 
 export default function PieChart(props: PieChartProps) {
 
+    const [ colors, setColors ] = React.useState([])
+
     const { data, style } = props
 
     const [selectedSliceIndex, setSelectedSliceIndex] = React.useState(null)
@@ -28,7 +30,20 @@ export default function PieChart(props: PieChartProps) {
         props.onSelect && props.onSelect(selectedSliceIndex)
     }, [selectedSliceIndex])
 
-    const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
+    const preferredColors = [palette.blue_700, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200, palette.green_200, palette.purple_200, palette.gray_700]
+    React.useEffect(() => {
+        const numberOfColorsToGenerate = data.length - preferredColors.length
+        const generatedColors = []
+        for (var i = 0; i < numberOfColorsToGenerate; i++) { 
+            let randomColor = null
+            do {
+                randomColor = getRandomColor()
+            } while (preferredColors.includes(randomColor) || generatedColors.includes(randomColor))
+            generatedColors.push(randomColor)
+        }
+        setColors(preferredColors.concat(generatedColors))
+    }, [])
+    
     const pieChartData = data.map((chartData, index) => {
         return {
             key: chartData.key,

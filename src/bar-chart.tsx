@@ -3,7 +3,7 @@ const ReactNative = require('react-native');
 const { View, Image, Text: RNText, TouchableOpacity, TouchableWithoutFeedback } = ReactNative;
 import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
-import { palette } from './colors';
+import { palette, getRandomColor } from './colors';
 
 interface ChartData {
     key: string,
@@ -23,6 +23,8 @@ export interface BarChartProps {
 
 export default function BarChart(props: BarChartProps) {
 
+    const [ colors, setColors ] = React.useState([])
+
     const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedIndex = 0 } = props
 
     const [selectedBarIndex, setSelectedBarIndex] = React.useState<number>(selectedIndex)
@@ -40,7 +42,20 @@ export default function BarChart(props: BarChartProps) {
     const [positions, setPositions] = React.useState([])
     const [barMargin, setBarMargin] = React.useState(0)
 
-    const colors = [palette.blue_150, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200]
+    const preferredColors = [palette.blue_700, palette.purple_100, palette.green_100, palette.blue_600, palette.gray_200, palette.green_200, palette.purple_200, palette.gray_700]
+    React.useEffect(() => {
+        const numberOfColorsToGenerate = data.length - preferredColors.length
+        const generatedColors = []
+        for (var i = 0; i < numberOfColorsToGenerate; i++) { 
+            let randomColor = null
+            do {
+                randomColor = getRandomColor()
+            } while (preferredColors.includes(randomColor) || generatedColors.includes(randomColor))
+            generatedColors.push(randomColor)
+        }
+        setColors(preferredColors.concat(generatedColors))
+    }, [])
+    
     const barChartData = data.map((chartData, index) => {
         return {
             key: chartData.key,
@@ -57,7 +72,7 @@ export default function BarChart(props: BarChartProps) {
     const Labels = (args) => {
         const { x, y, bandwidth, data } = args
         const colors = data.map((barData) => barData.svg.fill)
-        const fontSize = 14
+        const fontSize = 12
     
         let xPositions = []
         const labels = data.map((barData, index) => {
