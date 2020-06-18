@@ -85,6 +85,7 @@ export default function BarChart(props: BarChartProps) {
                         y={y(value)-fontSize}
                         fontSize={fontSize}
                         fontWeight={ selectedBarIndex !== null && selectedBarIndex === index ? 'bold' : 'normal'}
+                        fontFamily={"SourceSansPro-Regular"}
                         fill={  selectedBarIndex !== null && selectedBarIndex === index ? palette.black : palette.gray_500}
                         alignmentBaseline={'middle'}
                         textAnchor={'middle'}
@@ -128,6 +129,7 @@ export default function BarChart(props: BarChartProps) {
                 svg={{
                     fill: palette.gray_500,
                     fontSize: 12,
+                    fontFamily: "SourceSansPro-Regular"
                 }}
                 numberOfTicks={4}
                 min={0}
@@ -165,7 +167,7 @@ export default function BarChart(props: BarChartProps) {
                                     <View style={{ flexGrow: 1 }}>
                                         <RNText
                                             numberOfLines={2}
-                                            style={{ color: selectedBarIndex !== null && selectedBarIndex === index ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold' }}
+                                            style={{ color: selectedBarIndex !== null && selectedBarIndex === index ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold', fontFamily: "SourceSansPro-Regular" }}
                                         >
                                             {barChartData.map((chartData) => chartData.key)[index]}
                                         </RNText>

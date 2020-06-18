@@ -107,7 +107,8 @@ export default function AmplitudeRange(props: AmplitudeRangeProps) {
 const styles = StyleSheet.create({
   markerText: {
     color: palette.gray_400,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: "SourceSansPro-Regular"
   },
   markerTextContainer: {
     position: 'absolute', 

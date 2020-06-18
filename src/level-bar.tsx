@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   },
   levelText: {
     color: palette.white,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: "SourceSansPro-Regular"
   }
 })

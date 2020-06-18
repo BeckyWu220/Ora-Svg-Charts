@@ -98,11 +98,13 @@ export default function InfluenceBar(props: InfluenceBarProps) {
 
 const styles = StyleSheet.create({
   zeroMarkerText: {
-    color: palette.gray_500
+    color: palette.gray_500,
+    fontFamily: "SourceSansPro-Regular"
   },
   markerText: {
     color: palette.gray_400,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: "SourceSansPro-Regular"
   },
   markerTextContainer: {
     position: 'absolute', 

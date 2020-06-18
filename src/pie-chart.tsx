@@ -16,13 +16,14 @@ export interface PieChartProps {
     data: Array<ChartData>,
     onSelect?(data?: ChartData): any,
     style: object,
+    instructionText?: string
 }
 
 export default function PieChart(props: PieChartProps) {
 
     const [ colors, setColors ] = React.useState([])
 
-    const { data, style } = props
+    const { data, style, instructionText = '' } = props
 
     const [selectedSliceIndex, setSelectedSliceIndex] = React.useState(null)
 
@@ -79,6 +80,7 @@ export default function PieChart(props: PieChartProps) {
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
                     fontSize={14}
+                    fontFamily={"SourceSansPro-Regular"}
                 >
                     {data.value.toFixed(1) + '%'}
                 </Text>
@@ -96,7 +98,7 @@ export default function PieChart(props: PieChartProps) {
         }}>
             <View ref={chartRef} style={{ justifyContent: 'center', height: 360, ...style }}>
                 <SVGPieChart
-                    style={{ flex: 1 }}
+                    style={{ flex: 1 }}  
                     outerRadius={'80%'}
                     innerRadius={`${innerRadiusRatio * 100}%`}
                     data={pieChartData}
@@ -105,7 +107,7 @@ export default function PieChart(props: PieChartProps) {
                     <Labels/>
                 </SVGPieChart>
                 <View
-                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2, width: innerRadiusRatio * chartWidth }]}
+                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2 + 10, width: innerRadiusRatio * chartWidth - 20}]}
                     onLayout={() => {
                         chartRef.current.measure((x, y, width, height) => {
                             setChartWidth(width)
@@ -113,10 +115,10 @@ export default function PieChart(props: PieChartProps) {
                     }}
                 >
                     <RNText
-                        numberOfLines={2}
-                        style={styles.text}
+                        numberOfLines={4}
+                        style={[styles.text, !(selectedSliceIndex !== null && data[selectedSliceIndex].key) ? styles.instructionText : null]}
                         >
-                        { selectedSliceIndex !== null && data[selectedSliceIndex].key ?  data[selectedSliceIndex].key : '' }
+                        { selectedSliceIndex !== null && data[selectedSliceIndex].key ?  data[selectedSliceIndex].key : instructionText }
                     </RNText>
                 </View>
             </View>
@@ -133,6 +135,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         fontWeight: 'bold',
-        color: palette.gray_600,
+        fontFamily: "SourceSansPro-Regular",
+        color: palette.gray_600
+    },
+    instructionText: {
+        fontSize: 12,
+        fontWeight: 'normal',
+        color: palette.gray_600
     }
 });
