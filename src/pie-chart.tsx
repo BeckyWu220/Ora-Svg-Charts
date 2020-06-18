@@ -79,7 +79,7 @@ export default function PieChart(props: PieChartProps) {
                     fontWeight={ selectedSliceIndex === index ? "bold" : "normal"}
                     textAnchor={'middle'}
                     alignmentBaseline={'middle'}
-                    fontSize={14}
+                    fontSize={16}
                     fontFamily={"SourceSansPro-Regular"}
                 >
                     {data.value.toFixed(1) + '%'}
@@ -90,7 +90,7 @@ export default function PieChart(props: PieChartProps) {
 
     const chartRef = React.useRef()
 
-    const innerRadiusRatio = 0.35
+    const innerRadiusRatio = 0.42
 
     return (
         <TouchableWithoutFeedback onPress={() => {
@@ -99,7 +99,7 @@ export default function PieChart(props: PieChartProps) {
             <View ref={chartRef} style={{ justifyContent: 'center', height: 360, ...style }}>
                 <SVGPieChart
                     style={{ flex: 1 }}  
-                    outerRadius={'80%'}
+                    outerRadius={'95%'}
                     innerRadius={`${innerRadiusRatio * 100}%`}
                     data={pieChartData}
                     valueAccessor={({ item }) => item.value}
@@ -107,7 +107,7 @@ export default function PieChart(props: PieChartProps) {
                     <Labels/>
                 </SVGPieChart>
                 <View
-                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2 + 10, width: innerRadiusRatio * chartWidth - 20}]}
+                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2 + 15, width: innerRadiusRatio * chartWidth - 30}]}
                     onLayout={() => {
                         chartRef.current.measure((x, y, width, height) => {
                             setChartWidth(width)
@@ -133,13 +133,13 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         fontFamily: "SourceSansPro-Regular",
         color: palette.gray_600
     },
     instructionText: {
-        fontSize: 12,
+        fontSize: 16,
         fontWeight: 'normal',
         color: palette.gray_600
     }
