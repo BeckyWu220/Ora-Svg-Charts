@@ -3,6 +3,7 @@ const ReactNative = require('react-native');
 const { View, Text: RNText, StyleSheet, TouchableWithoutFeedback } = ReactNative;
 // import { View, Dimensions, Text as RNText, StyleSheet } from 'react-native';
 import { PieChart as SVGPieChart } from 'react-native-svg-charts';
+import { isTablet } from 'react-native-device-detection';
 import { Text } from 'react-native-svg';
 import { palette, getRandomColor } from './colors';
 
@@ -66,6 +67,7 @@ export default function PieChart(props: PieChartProps) {
     })
 
     const [chartWidth, setChartWidth] = React.useState(0)
+    const offsetX = React.useRef(0)
 
     const Labels = ({ slices }) => {
         return slices.map((slice, index) => {
@@ -96,7 +98,7 @@ export default function PieChart(props: PieChartProps) {
         <TouchableWithoutFeedback onPress={() => {
             setSelectedSliceIndex(null)
         }}>
-            <View ref={chartRef} style={{ justifyContent: 'center', height: 360, ...style }}>
+            <View ref={chartRef} style={{ justifyContent: 'center',  height: 360, ...style }}>
                 <SVGPieChart
                     style={{ flex: 1 }}  
                     outerRadius={'95%'}
@@ -106,11 +108,13 @@ export default function PieChart(props: PieChartProps) {
                 >
                     <Labels/>
                 </SVGPieChart>
+                
                 <View
-                    style={[styles.textContainer, { left: (chartWidth * (1 - innerRadiusRatio)) / 2 + 15, width: innerRadiusRatio * chartWidth - 30}]}
+                    style={[styles.textContainer,{left: offsetX.current + (1-innerRadiusRatio) * chartWidth / 2 ,width: innerRadiusRatio * chartWidth}]}
                     onLayout={() => {
                         chartRef.current.measure((x, y, width, height) => {
-                            setChartWidth(width)
+                            offsetX.current = (width - height) / 2
+                            setChartWidth(height)
                         })
                     }}
                 >
@@ -121,6 +125,7 @@ export default function PieChart(props: PieChartProps) {
                         { selectedSliceIndex !== null && data[selectedSliceIndex].key ?  data[selectedSliceIndex].key : instructionText }
                     </RNText>
                 </View>
+                
             </View>
         </TouchableWithoutFeedback>
     )
@@ -129,7 +134,10 @@ export default function PieChart(props: PieChartProps) {
 const styles = StyleSheet.create({
     textContainer: {
         position: 'absolute',
-        padding: 10
+        padding: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     text: {
         textAlign: 'center',
