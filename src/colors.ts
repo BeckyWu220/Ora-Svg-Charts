@@ -55,3 +55,20 @@ export const getRandomColor = () => {
   return `#${blendColorPartials}`
 }
 
+export const blendWithWhite = (color) => {
+  const firstColorHex = color.replace('#', '')
+  const secondColorHex = 'FFFFFF'
+
+  const firstColorPartials = firstColorHex.match(/.{2}/g); 
+  const secondColorPartials = secondColorHex.match(/.{2}/g); 
+  const blendColorPartials = firstColorPartials.map((p, index) => {
+
+    const firstPartial = parseInt(`0x${p}`)
+    const secondPartial = parseInt(`0x${secondColorPartials[index]}`)
+
+    const avgPartial = Math.floor(((firstPartial + secondPartial) / 2 + firstPartial) / 2)
+    return avgPartial.toString(16)
+  }).join('')
+  return `#${blendColorPartials}`
+}
+

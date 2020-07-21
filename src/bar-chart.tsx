@@ -3,7 +3,7 @@ const ReactNative = require('react-native');
 const { View, Image, Text: RNText, TouchableOpacity, TouchableWithoutFeedback } = ReactNative;
 import { BarChart as SVGBarChart, Grid, YAxis } from 'react-native-svg-charts';
 import { Rect, G, Text } from 'react-native-svg';
-import { palette, getRandomColor } from './colors';
+import { palette, getRandomColor, blendWithWhite } from './colors';
 
 interface ChartData {
     key: string,
@@ -61,7 +61,7 @@ export default function BarChart(props: BarChartProps) {
             key: chartData.key,
             value: chartData.value,
             svg: {
-                fill: chartData.color || colors[index],
+                fill: selectedBarIndex !== null && selectedBarIndex === index ? chartData.color || colors[index] : blendWithWhite(chartData.color || colors[index]),
                 onClick: () => onSelectBar(index), // Make sure the svg is clickable in web app.
                 onPress: () => onSelectBar(index)
             },
