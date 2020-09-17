@@ -19,13 +19,15 @@ export interface BarChartProps {
     strokeLinecap: 'round' | 'square' | 'butt'
     onSelect?(index: number): any,
     selectedIndex: number,
+    hideValues?: boolean,
+    hideKeys?: boolean
 }
 
 export default function BarChart(props: BarChartProps) {
 
     const [ colors, setColors ] = React.useState([])
 
-    const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedIndex = 0 } = props
+    const { data, style, strokeWidth = 5, strokeLinecap = 'round', selectedIndex = 0, hideValues = false, hideKeys = false } = props
 
     const [selectedBarIndex, setSelectedBarIndex] = React.useState<number>(selectedIndex)
 
@@ -80,18 +82,20 @@ export default function BarChart(props: BarChartProps) {
             xPositions.push(x(index))
             return (
                 <G key={index}>
-                    <Text
-                        x={x(index) + (bandwidth / 2)}
-                        y={y(value)-fontSize}
-                        fontSize={fontSize}
-                        fontWeight={ selectedBarIndex !== null && selectedBarIndex === index ? 'bold' : 'normal'}
-                        fontFamily={"SourceSansPro-Regular"}
-                        fill={  selectedBarIndex !== null && selectedBarIndex === index ? palette.black : palette.gray_500}
-                        alignmentBaseline={'middle'}
-                        textAnchor={'middle'}
-                    >
-                        {value.toFixed(1) + '%'}
-                    </Text>
+                    {   !hideValues &&
+                        <Text
+                            x={x(index) + (bandwidth / 2)}
+                            y={y(value)-fontSize}
+                            fontSize={fontSize}
+                            fontWeight={ selectedBarIndex !== null && selectedBarIndex === index ? 'bold' : 'normal'}
+                            fontFamily={"SourceSansPro-Regular"}
+                            fill={  selectedBarIndex !== null && selectedBarIndex === index ? palette.black : palette.gray_500}
+                            alignmentBaseline={'middle'}
+                            textAnchor={'middle'}
+                        >
+                            {value.toFixed(1) + '%'}
+                        </Text>
+                    }
                     { strokeLinecap !== 'butt' &&
                         <Rect
                             x={x(index)}
@@ -148,7 +152,7 @@ export default function BarChart(props: BarChartProps) {
                     <Labels />
                 </SVGBarChart>
                 {   barWidth > 0 &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 60 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 40 }}>
                         { barChartData.map((chartData, index) => {
                             return (
                                 <View key={index} style={{ width: barWidth + 2 * barMargin, height: '100%', position: 'absolute', left: positions[index] - barMargin }}>
@@ -164,14 +168,17 @@ export default function BarChart(props: BarChartProps) {
                                             />
                                         </TouchableOpacity>
                                     }
-                                    <View style={{ flexGrow: 1 }}>
-                                        <RNText
-                                            numberOfLines={2}
-                                            style={{ color: selectedBarIndex !== null && selectedBarIndex === index ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold', fontFamily: "SourceSansPro-Regular" }}
-                                        >
-                                            {barChartData.map((chartData) => chartData.key)[index]}
-                                        </RNText>
-                                    </View>
+                                    {   !hideKeys &&
+                                        <View style={{ flexGrow: 1 }}>
+                                            <RNText
+                                                numberOfLines={2}
+                                                style={{ color: selectedBarIndex !== null && selectedBarIndex === index ? palette.gray_600 : palette.gray_500, textAlign: 'center', fontWeight: 'bold', fontFamily: "SourceSansPro-Regular" }}
+                                            >
+                                                {barChartData.map((chartData) => chartData.key)[index]}
+                                            </RNText>
+                                        </View>
+                                    }
+                                    
                                 </View>
                             )
                         }) }
